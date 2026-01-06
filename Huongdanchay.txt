@@ -1,0 +1,81 @@
+HƯỚNG DẪN CÀI ĐẶT & CHẠY HỆ THỐNG AI TOXIC GUARD
+(Phiên bản Client-Server: FastAPI + Streamlit)
+
+1. Cấu trúc thư mục chuẩn
+    Để hệ thống chạy không bị lỗi, hãy đảm bảo thư mục dự án (D:\MLDL02\ASM_MLD) của bạn có đủ các file sau:
+
+    📂 ASM_MLD/
+
+    📄 api.py : (Code Backend - Chứa Model & Xử lý logic)
+
+    📄 ui.py : (Code Frontend - Giao diện Web Streamlit)
+
+    📄 vocab.pkl : (File từ điển - Tạo ra từ lúc Train)
+
+    📄 saved_model.pth: (File trọng số Model - Tạo ra từ lúc Train)
+
+
+
+2. Cài đặt thư viện (Chỉ làm 1 lần)
+    Mở Terminal trong VS Code và chạy lệnh sau để cài tất cả thư viện cần thiết:
+
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+    pip install fastapi uvicorn streamlit pandas plotly requests
+    (Lưu ý: Nếu máy bạn có GPU NVIDIA thì cài bản Pytorch GPU, còn lệnh trên là bản CPU nhẹ nhất).
+
+3. Cách chạy hệ thống (Quan trọng)
+    Hệ thống này chạy theo mô hình Client-Server nên cần 2 Terminal hoạt động cùng lúc.
+
+    BƯỚC 1: BẬT SERVER (BACKEND)
+    Trong VS Code, mở Terminal số 1.
+
+    Gõ lệnh sau và Enter:
+
+    uvicorn api:app --reload
+    Thành công khi: Bạn thấy dòng chữ Application startup complete.
+
+    Lưu ý: TUYỆT ĐỐI KHÔNG TẮT TERMINAL NÀY.
+
+    BƯỚC 2: BẬT GIAO DIỆN (FRONTEND)
+    Bấm vào dấu + hoặc biểu tượng chia đôi màn hình trong VS Code để mở Terminal số 2.
+
+    Gõ lệnh sau và Enter:
+
+    streamlit run ui.py
+    Trình duyệt web sẽ tự động bật lên. Giao diện đã sẵn sàng!
+
+4. Cách sử dụng
+    Nhập một câu bình luận tiếng Anh vào ô trống (Ví dụ: "You are stupid").
+
+    Nhấn nút 🚀 KÍCH HOẠT PHÂN TÍCH.
+
+    Kết quả sẽ hiển thị ngay bên dưới (Biểu đồ Radar & % Độc hại).
+
+    Muốn xóa nhanh để nhập câu khác? Nhấn nút 🔄 LÀM MỚI (RESET).
+
+    Muốn xem hệ thống đang xử lý gì? Tích vào ô Show Server Logs bên thanh menu trái.
+
+5. Khắc phục lỗi thường gặp
+    Lỗi 1: Import "fastapi" could not be resolved
+
+    Nguyên nhân: Chưa cài thư viện hoặc VS Code chọn sai Python.
+
+    Sửa: Chạy lại lệnh cài đặt ở mục 2. Bấm Ctrl+Shift+P -> chọn Python: Select Interpreter -> chọn cái nào có dòng (Recommended).
+
+    Lỗi 2: ConnectionError / Max retries exceeded (Chữ đỏ lòm trên Web)
+
+    Nguyên nhân: Bạn chưa bật api.py hoặc đã tắt Terminal 1.
+
+    Sửa: Quay lại Terminal 1 và chạy lệnh uvicorn api:app --reload.
+
+    Lỗi 3: File does not exist: ui.py
+
+    Nguyên nhân: Bạn đang đứng sai thư mục hoặc đặt sai tên file.
+
+    Sửa: Gõ lệnh ls để xem tên file là gì. Đổi tên file cho đúng là ui.py.
+
+    Lỗi 4: RuntimeError: Error(s) in loading state_dict for ToxicLSTM
+
+    Nguyên nhân: File saved_model.pth không khớp với code Model trong api.py.
+
+    Sửa: Đảm bảo các thông số EMBEDDING_DIM, HIDDEN_DIM trong api.py giống hệt lúc bạn Train trong Notebook.
